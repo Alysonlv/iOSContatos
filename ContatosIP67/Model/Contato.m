@@ -1,0 +1,18 @@
+//
+//  Contato.m
+//  ContatosIP67
+//
+//  Created by ios7061 on 4/25/17.
+//  Copyright © 2017 Caelum. All rights reserved.
+//
+
+#import "Contato.h"
+
+@implementation Contato
+    
+
+-(NSString *)description {
+    return [NSString stringWithFormat: @"Nome: %@, Telefone: %@, Endereco: %@, Site: %@", self.name, self.phone, self.addres, self.urlSite];
+}
+
+@end
