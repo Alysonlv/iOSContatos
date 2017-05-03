@@ -8,14 +8,18 @@
 
 import UIKit
 
-class FormContactViewController: UIViewController {
+class FormContactViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
     @IBOutlet var name: UITextField!
     @IBOutlet var phone: UITextField!
     @IBOutlet var addres: UITextField!
     @IBOutlet var urlSite: UITextField!
+    @IBOutlet var imagemView: UIImageView!
     
     var dao:ContatoDao!
+    var contato:Contato!
+    
+    var delegate:FormularioContatoViewControllerDelegation?
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder);
@@ -25,6 +29,19 @@ class FormContactViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        if (contato != nil) {
+            self.name.text = contato.name;
+            self.phone.text = contato.phone;
+            self.addres.text = contato.addres;
+            self.urlSite.text = contato.urlSite;
+            
+            let btnUpdate = UIBarButtonItem(title: "Confirmar", style: .plain, target:self, action: #selector(updateContact));
+            self.navigationItem.rightBarButtonItem = btnUpdate;
+            
+            let imgTap = UITapGestureRecognizer(target: self, action: #selector(selecinaFoto(sender:)));
+            self.imagemView.addGestureRecognizer(imgTap);
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -33,7 +50,11 @@ class FormContactViewController: UIViewController {
     }
     
     func readFormData() -> Contato {
-        let contato: Contato = Contato();
+        
+        if (contato == nil) {
+            self.contato = Contato();            
+        }
+        
         contato.name = self.name.text!
         contato.phone = self.phone.text!
         contato.addres = self.addres.text!
@@ -43,12 +64,43 @@ class FormContactViewController: UIViewController {
     }
     
     @IBAction func createContact() {
-        print("Button ADD clicked!");
+        self.readFormData();
+        dao.addContact(contact: contato);
+        self.delegate?.contatoAdicionado(contato);
         
-        dao.addContact(contact: self.readFormData());
-        
-        self.navigationController?.popViewController(animated: true);
+        _ = self.navigationController?.popViewController(animated: true);
     }
+    
+    func updateContact() {
+        readFormData();
+        
+        self.delegate?.contatoAtualizado(contato);
+        
+        _ = self.navigationController?.popViewController(animated: true);
+    }
+    
+    func selecinaFoto(sender: AnyObject) {
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            
+        } else {
+            let pickerController = UIImagePickerController();
+            pickerController.sourceType = .photoLibrary;
+            pickerController.allowsEditing = true;
+            pickerController.delegate = self;
+            
+            self.present(pickerController, animated: true, completion: nil);
+        }
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        
+        if let imagemSelecionada = info[UIImagePickerControllerEditedImage] as? UIImage {
+            self.imagemView.image = imagemSelecionada;
+        }
+        
+        picker.dismiss(animated: true, completion: nil);
+    }
+    
 
 
 }

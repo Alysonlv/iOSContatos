@@ -8,17 +8,39 @@
 
 import UIKit
 
-class ListContactsTableViewController: UITableViewController {
+class ListContactsTableViewController: UITableViewController, FormularioContatoViewControllerDelegation {
     
     var dao:ContatoDao!
     static let cellIdentifier:String = "Cell";
     var contacts:[Contato]!
+    var contato:Contato!
+    var linhaDestaque: IndexPath?
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder);
         
         self.dao = ContatoDao.ContatoDaoInstance();
         self.navigationItem.leftBarButtonItem = self.editButtonItem;
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let contactSelected = dao.getContact(index: indexPath.row);
+        
+        print("editando...");
+        
+        print("editando: \(contactSelected.name)")
+        self.showForm(contactSelected);
+    }
+    
+    func showForm(_ contato:Contato) {
+        let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil);
+        let form = storyBoard.instantiateViewController(withIdentifier: "Form-Contato") as! FormContactViewController;
+        
+        form.delegate = self;
+        
+        form.contato = contato;
+        
+        self.navigationController?.pushViewController(form, animated: true);
     }
 
     override func viewDidLoad() {
@@ -29,11 +51,21 @@ class ListContactsTableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(exibirMaisAcoes(gesture:)))
+        
+        self.tableView.addGestureRecognizer(longPress);
     }
     
     override func viewDidAppear(_ animated: Bool) {
         self.tableView.reloadData();
         self.contacts = self.dao.getAllContacts();
+        
+        if let linha = self.linhaDestaque {
+            self.tableView.selectRow(at: linha, animated: true, scrollPosition: .middle);
+            self.linhaDestaque = Optional.none;
+        }
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -86,6 +118,14 @@ class ListContactsTableViewController: UITableViewController {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
         }    
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if (segue.identifier == "FormSegue") {
+            if let form = segue.destination as? FormContactViewController {
+                form.delegate = self;
+            }
+        }
+    }
 
     /*
     // Override to support rearranging the table view.
@@ -111,5 +151,30 @@ class ListContactsTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    func contatoAtualizado(_ contato: Contato) {
+        print("DELEGATE - contato atualizado: \(contato.name)");
+        //self.linhaDestaque = IndexPath(row: dao.buscaPosicaoDoContato(contato), inSection: 0);
+    }
+    
+    func contatoAdicionado(_ contato: Contato) {
+        print("DELEGATE - contato adicionado... \(contato.name)");
+        //self.linhaDestaque = IndexPath(row: dao.buscaPosicaoDoContato(contato), inSection: 0);
+    }
+    
+    func exibirMaisAcoes(gesture: UIGestureRecognizer) {
+        if gesture.state == .began {
+            let ponto = gesture.location(in: self.tableView);
+            
+            if let indexPath:IndexPath? = self.tableView.indexPathForRow(at:ponto) {
+                
+                let c = self.dao.getContact(index: (indexPath?.row)!);
+                
+                let acoes = GerenciadorDeAcoes(do: c);
+                
+                acoes.exibirAcoes(em: self);
+            }
+        }
+    }
 
 }
