@@ -31,6 +31,9 @@ class FormContactViewController: UIViewController, UINavigationControllerDelegat
         // Do any additional setup after loading the view, typically from a nib.
         
         if (contato != nil) {
+            if let foto = contato.photo {
+                self.imagemView.image = contato.photo;
+            }
             self.name.text = contato.name;
             self.phone.text = contato.phone;
             self.addres.text = contato.addres;
@@ -39,9 +42,11 @@ class FormContactViewController: UIViewController, UINavigationControllerDelegat
             let btnUpdate = UIBarButtonItem(title: "Confirmar", style: .plain, target:self, action: #selector(updateContact));
             self.navigationItem.rightBarButtonItem = btnUpdate;
             
-            let imgTap = UITapGestureRecognizer(target: self, action: #selector(selecinaFoto(sender:)));
-            self.imagemView.addGestureRecognizer(imgTap);
+            
         }
+        
+        let imgTap = UITapGestureRecognizer(target: self, action: #selector(selecinaFoto(sender:)));
+        self.imagemView.addGestureRecognizer(imgTap);
     }
 
     override func didReceiveMemoryWarning() {
@@ -55,6 +60,7 @@ class FormContactViewController: UIViewController, UINavigationControllerDelegat
             self.contato = Contato();            
         }
         
+        contato.photo = self.imagemView.image
         contato.name = self.name.text!
         contato.phone = self.phone.text!
         contato.addres = self.addres.text!
@@ -80,6 +86,7 @@ class FormContactViewController: UIViewController, UINavigationControllerDelegat
     }
     
     func selecinaFoto(sender: AnyObject) {
+        
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             
         } else {

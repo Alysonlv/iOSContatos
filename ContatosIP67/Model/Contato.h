@@ -7,9 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface Contato : NSObject
 
+@property (strong) UIImage *photo;
 @property (strong) NSString *name;
 @property (strong) NSString *phone;
 @property (strong) NSString *addres;
