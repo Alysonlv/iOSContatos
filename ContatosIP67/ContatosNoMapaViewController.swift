@@ -84,5 +84,16 @@ class ContatosNoMapaViewController: UIViewController, MKMapViewDelegate {
         
         return pino;
     }
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        
+        let pinToZoomOn = view.annotation;
+        
+        let span = MKCoordinateSpanMake(0.5, 0.5);
+        
+        let region = MKCoordinateRegion(center: pinToZoomOn!.coordinate, span: span);
+        
+        mapView.setRegion(region, animated: true);
+    }
 
 }
