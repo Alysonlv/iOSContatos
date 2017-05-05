@@ -135,21 +135,29 @@ class FormContactViewController: UIViewController, UINavigationControllerDelegat
                     let coordenada = placemark.location!.coordinate;
                     self.latitude.text = coordenada.latitude.description;
                     self.longitude.text = coordenada.longitude.description;
+                    
+                    self.loading.stopAnimating();
+                    sender.isEnabled = true;
                 }
                 
             }
+            
         } else {
+            self.loading.stopAnimating();
+            
             let alertView = UIAlertController(title: "Por favor, digite o endereco!", message: nil, preferredStyle: .alert);
             
             let msg = UIAlertAction(title: "OK!", style: .cancel);
             alertView.addAction(msg);
+            
             present(alertView, animated: true, completion: nil);
+            sender.isEnabled = true;
         }
         
         
         
-        self.loading.stopAnimating();
-        sender.isEnabled = true;
+        
+        
         
     }
 
