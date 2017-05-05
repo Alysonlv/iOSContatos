@@ -6,7 +6,8 @@
 //  Copyright © 2017 Caelum. All rights reserved.
 //
 
-import UIKit
+import UIKit;
+import CoreLocation;
 
 class FormContactViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
@@ -15,6 +16,9 @@ class FormContactViewController: UIViewController, UINavigationControllerDelegat
     @IBOutlet var addres: UITextField!
     @IBOutlet var urlSite: UITextField!
     @IBOutlet var imagemView: UIImageView!
+    @IBOutlet var latitude: UITextField!
+    @IBOutlet var longitude: UITextField!
+    @IBOutlet weak var loading: UIActivityIndicatorView!
     
     var dao:ContatoDao!
     var contato:Contato!
@@ -32,12 +36,15 @@ class FormContactViewController: UIViewController, UINavigationControllerDelegat
         
         if (contato != nil) {
             if let foto = contato.photo {
-                self.imagemView.image = contato.photo;
+                self.imagemView.image = foto;
             }
             self.name.text = contato.name;
             self.phone.text = contato.phone;
             self.addres.text = contato.addres;
             self.urlSite.text = contato.urlSite;
+            
+            self.latitude.text = contato.latitude?.description;
+            self.longitude.text = contato.longitude?.description;
             
             let btnUpdate = UIBarButtonItem(title: "Confirmar", style: .plain, target:self, action: #selector(updateContact));
             self.navigationItem.rightBarButtonItem = btnUpdate;
@@ -54,7 +61,7 @@ class FormContactViewController: UIViewController, UINavigationControllerDelegat
         // Dispose of any resources that can be recreated.
     }
     
-    func readFormData() -> Contato {
+    func readFormData() {
         
         if (contato == nil) {
             self.contato = Contato();            
@@ -66,7 +73,13 @@ class FormContactViewController: UIViewController, UINavigationControllerDelegat
         contato.addres = self.addres.text!
         contato.urlSite = self.urlSite.text!
         
-        return contato;
+        if let lat = Double(self.latitude.text!) {
+            contato.latitude = lat as NSNumber;
+        }
+        
+        if let longi = Double(self.longitude.text!) {
+            contato.longitude = longi as NSNumber;
+        }
     }
     
     @IBAction func createContact() {
@@ -108,7 +121,37 @@ class FormContactViewController: UIViewController, UINavigationControllerDelegat
         picker.dismiss(animated: true, completion: nil);
     }
     
-
+    @IBAction func buscarCoordenadas(sender: UIButton) {
+        self.loading.startAnimating();
+        sender.isEnabled = false;
+        
+        self.readFormData();
+        
+        if (self.addres.text != "") {
+            let geocoder = CLGeocoder();
+            geocoder.geocodeAddressString(self.contato.addres!) { (resultado, error) in
+                if error == nil && (resultado?.count)! > 0 {
+                    let placemark = resultado![0];
+                    let coordenada = placemark.location!.coordinate;
+                    self.latitude.text = coordenada.latitude.description;
+                    self.longitude.text = coordenada.longitude.description;
+                }
+                
+            }
+        } else {
+            let alertView = UIAlertController(title: "Por favor, digite o endereco!", message: nil, preferredStyle: .alert);
+            
+            let msg = UIAlertAction(title: "OK!", style: .cancel);
+            alertView.addAction(msg);
+            present(alertView, animated: true, completion: nil);
+        }
+        
+        
+        
+        self.loading.stopAnimating();
+        sender.isEnabled = true;
+        
+    }
 
 }
 

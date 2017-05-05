@@ -16,5 +16,7 @@
 @property (strong) NSString *phone;
 @property (strong) NSString *addres;
 @property (strong) NSString *urlSite;
+@property (strong) NSNumber *latitude;
+@property (strong) NSNumber *longitude;
 
 @end

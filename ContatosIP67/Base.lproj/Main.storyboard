@@ -75,7 +75,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vp9-g1-6n3">
-                                <frame key="frameInset" minX="66" minY="87" width="240" height="128"/>
+                                <frame key="frameInset" minX="20" minY="72" width="335" height="143"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -85,14 +85,14 @@
                                 </accessibility>
                             </imageView>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Bhl-92-8fG">
-                                <frame key="frameInset" minX="90" minY="402" width="265" height="30"/>
+                                <frame key="frameInset" minX="90" minY="402" width="169" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3A0-Y1-9SR">
-                                <frame key="frameInset" minX="90" minY="440" width="265" height="30"/>
+                                <frame key="frameInset" minX="90" minY="440" width="169" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -112,6 +112,20 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wQh-Bt-pM7">
+                                <frame key="frameInset" minX="278" minY="426" width="43" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button" image="gps"/>
+                                <connections>
+                                    <action selector="buscarCoordenadasWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ywV-cH-oQQ"/>
+                                </connections>
+                            </button>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="HkO-Up-hsa">
+                                <frame key="frameInset" minX="312" minY="426" width="20" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="color" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -125,6 +139,9 @@
                     <connections>
                         <outlet property="addres" destination="pwH-T1-vWm" id="vwq-Rj-IFz"/>
                         <outlet property="imagemView" destination="vp9-g1-6n3" id="F4O-PN-ORb"/>
+                        <outlet property="latitude" destination="Bhl-92-8fG" id="j7d-Kf-EPc"/>
+                        <outlet property="loading" destination="HkO-Up-hsa" id="oef-lF-lyw"/>
+                        <outlet property="longitude" destination="3A0-Y1-9SR" id="jSp-XK-1VK"/>
                         <outlet property="name" destination="ye5-vi-DFV" id="irm-I0-ttu"/>
                         <outlet property="phone" destination="uJy-8e-iFJ" id="XWq-aR-1JG"/>
                         <outlet property="urlSite" destination="gP0-zc-BPH" id="hht-Vv-Ppo"/>
@@ -214,7 +231,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="p9p-O2-OQX">
-                                            <frame key="frameInset" minY="-1" height="44" maxX="2"/>
+                                            <frame key="frameInset" minY="-1" height="44" maxX="3"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                         </navigationBar>
                                     </subviews>
@@ -261,6 +278,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="gps" width="30" height="30"/>
         <image name="lista-contatos" width="30" height="30"/>
         <image name="mapa-contatos" width="30" height="30"/>
     </resources>
