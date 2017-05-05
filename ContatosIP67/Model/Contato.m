@@ -15,4 +15,17 @@
     return [NSString stringWithFormat: @"Nome: %@, Telefone: %@, Endereco: %@, Site: %@", self.name, self.phone, self.addres, self.urlSite];
 }
 
+-(CLLocationCoordinate2D)coordinate {
+    return CLLocationCoordinate2DMake([self.latitude doubleValue], [self.longitude doubleValue]);
+}
+
+
+-(NSString *)title {
+    return self.name;
+}
+
+-(NSString *)subtitle {
+    return self.urlSite;
+}
+
 @end

@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import <MapKit/MKAnnotation.h>
 
-@interface Contato : NSObject
+@interface Contato : NSObject <MKAnnotation>
 
 @property (strong) UIImage *photo;
 @property (strong) NSString *name;

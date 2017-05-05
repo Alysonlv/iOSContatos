@@ -9,13 +9,18 @@
 import UIKit;
 import MapKit;
 
-class ContatosNoMapaViewController: UIViewController {
+class ContatosNoMapaViewController: UIViewController, MKMapViewDelegate {
     
     @IBOutlet weak var mapa:MKMapView!
     let locationManager = CLLocationManager();
+    
+    var contatos: [Contato] = Array();
+    var dao:ContatoDao = ContatoDao.ContatoDaoInstance();
 
     override func viewDidLoad() {
-        super.viewDidLoad()
+        super.viewDidLoad();
+        
+        self.mapa.delegate = self;
         
         self.locationManager.requestWhenInUseAuthorization();
         
@@ -23,6 +28,15 @@ class ContatosNoMapaViewController: UIViewController {
         
         self.navigationItem.rightBarButtonItem = botaoLocalizacao;
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.contatos = dao.getAllContacts();
+        self.mapa.addAnnotations(self.contatos);
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.mapa.removeAnnotations(self.contatos);
     }
 
     override func didReceiveMemoryWarning() {
@@ -40,5 +54,35 @@ class ContatosNoMapaViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if annotation is MKUserLocation {
+            return nil;
+        }
+        
+        let identifier:String = "pino";
+        
+        var pino:MKPinAnnotationView;
+        
+        if let reusablePin = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKPinAnnotationView {
+            pino = reusablePin;
+        } else {
+            pino = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier);
+        }
+        
+        if let contato = annotation as? Contato {
+            pino.pinTintColor = UIColor.red;
+            pino.canShowCallout = true;
+            
+            let frame = CGRect(x: 0.0, y: 0.0, width: 32.0, height: 32.0);
+            let imagemContato = UIImageView(frame: frame);
+            
+            imagemContato.image = contato.photo;
+            
+            pino.leftCalloutAccessoryView = imagemContato;
+        }
+        
+        return pino;
+    }
 
 }
