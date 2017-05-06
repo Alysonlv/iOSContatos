@@ -59,6 +59,7 @@ class ListContactsTableViewController: UITableViewController, FormularioContatoV
     
     override func viewDidAppear(_ animated: Bool) {
         self.tableView.reloadData();
+        self.dao.carregaContatos();
         self.contacts = self.dao.getAllContacts();
         
         if let linha = self.linhaDestaque {
@@ -87,6 +88,7 @@ class ListContactsTableViewController: UITableViewController, FormularioContatoV
   
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let contato:Contato = self.getContact(index: indexPath.row);
+        
         var cell:UITableViewCell? = tableView.dequeueReusableCell(withIdentifier: ListContactsTableViewController.cellIdentifier);
 
         if (cell == nil) {
@@ -99,7 +101,7 @@ class ListContactsTableViewController: UITableViewController, FormularioContatoV
     }
     
     private func getContact(index:Int) -> Contato {
-        return self.contacts[index];
+        return self.dao.getAllContacts()[index];
     }
 
     

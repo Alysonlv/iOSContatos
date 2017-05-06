@@ -64,7 +64,7 @@ class FormContactViewController: UIViewController, UINavigationControllerDelegat
     func readFormData() {
         
         if (contato == nil) {
-            self.contato = Contato();            
+            self.contato = dao.novoContato();
         }
         
         contato.photo = self.imagemView.image
@@ -88,6 +88,7 @@ class FormContactViewController: UIViewController, UINavigationControllerDelegat
         self.delegate?.contatoAdicionado(contato);
         
         _ = self.navigationController?.popViewController(animated: true);
+        dao.saveContext();
     }
     
     func updateContact() {
